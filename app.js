@@ -3,8 +3,10 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 //MODELS
 const User = require('./models/user');
+const auth = require('./middlewares/auth');
 //CONFIGURATIONS
 require('./config/database').connect();
 //give path if .env file is not in the root directory
@@ -15,6 +17,7 @@ const app = express();
 
 //middleware by express for accepting json
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello there!</h1>');
@@ -88,6 +91,17 @@ app.post('/login', async (req, res) => {
       user.token = token;
       //set the password invisible (if want not to show any data to the client make it undefined)
       user.password = undefined;
+      //if you want to use cookies
+      const options = {
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        //only visible to the backend not the front end
+        httpOnly: true,
+      };
+      res.status(200).cookie('token', token, options).json({
+        success: true,
+        token: token,
+        user: user,
+      });
       //send the user data to the client
       res.status(200).json(user);
     }
@@ -98,7 +112,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', auth, (req, res) => {
   res.send('Welcome to secret info');
 });
 
