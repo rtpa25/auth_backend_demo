@@ -15,6 +15,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     unique: true,
+    //the constraints are not on the db rather they are on the code itself and can be manipulated in the db directly
     required: [true, 'Email is a required parametre'],
   },
   password: {
