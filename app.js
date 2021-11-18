@@ -102,7 +102,7 @@ app.post('/login', async (req, res) => {
         token: token,
         user: user,
       });
-      //send the user data to the client
+      //send the user data to the client normally without cookies
       res.status(200).json(user);
     }
     //else send an error message that the the data is incorrect
