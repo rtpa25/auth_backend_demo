@@ -26,4 +26,5 @@ const UserSchema = new Schema({
 });
 
 //this makes a model of user which follows UserSchema
+//mongoose looks for the plural and lowercased version of the single model and names a collection called users where it stores instances of User model inside
 module.exports = mongoose.model('user', UserSchema);
